@@ -2,6 +2,7 @@
 import express from 'express';
 import itemsRouter from './routes/items-router.js';
 import usersRouter from './routes/users-router.js';
+import { notFoundHandler, errorHandler } from './middlewares/error-handler.js'; // معالجات الأخطاء
 
 // إعدادات السيرفر
 const hostname = '127.0.0.1'; // عنوان السيرفر
@@ -27,11 +28,11 @@ app.use('/api/items', itemsRouter);
 // نقاط النهاية للمستخدمين
 app.use('/api/users', usersRouter);
 
-// معالج الأخطاء
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(err.status || 500).json({ error: err.message || 'Internal Server Error' });
-});
+// إذا المسار غير موجود
+app.use(notFoundHandler);
+
+// معالج الأخطاء (آخر شيء)
+app.use(errorHandler);
 
 // تشغيل السيرفر
 app.listen(port, hostname, () => {
