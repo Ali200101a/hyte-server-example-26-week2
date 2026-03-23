@@ -1,40 +1,50 @@
-// استيراد المكتبات المطلوبة
+// استيراد مكتبة Express لبناء تطبيق الويب والـ API
 import express from 'express';
+// استيراد ملفات التوجيه (Routers) التي تحتوي على نقاط النهاية للموارد المختلفة
 import itemsRouter from './routes/items-router.js';
 import usersRouter from './routes/users-router.js';
-import { notFoundHandler, errorHandler } from './middlewares/error-handler.js'; // معالجات الأخطاء
+// استيراد معالجات الأخطاء المخصصة (Custom Error Handlers)
+import { notFoundHandler, errorHandler } from './middlewares/error-handler.js';
 
-// إعدادات السيرفر
-const hostname = '127.0.0.1'; // عنوان السيرفر
-const app = express(); // إنشاء تطبيق Express
-const port = 3000; // رقم المنفذ
+// تحديد عنوان IP الذي سيعمل عليه السيرفر (localhost)
+const hostname = '127.0.0.1';
+// إنشاء تطبيق Express - هذا هو قلب التطبيق
+const app = express();
+// تحديد رقم المنفذ (Port) الذي سيستمع عليه السيرفر
+const port = 3000;
 
-// تحويل البيانات الواردة إلى JSON
+// Middleware: تحويل البيانات الواردة من JSON إلى كائنات JavaScript
+// هذا ضروري لقراءة req.body في الطلبات
 app.use(express.json());
 
-// Root route
+// نقطة نهاية رئيسية للتحقق من أن السيرفر يعمل
 app.get('/', (req, res) => {
   res.send('Server is running! Visit /api for the API.');
 });
 
-// صفحة API الرئيسية
+// نقطة نهاية تجريبية للـ API
 app.get('/api', (req, res) => {
   res.send('This is dummy items API!');
 });
 
-// نقاط النهاية للأغراض (الفواكه)
+// تسجيل موجه الأغراض (Items Router) - جميع الطلبات التي تبدأ بـ /api/items
+// سيتم توجيهها إلى itemsRouter للمعالجة
 app.use('/api/items', itemsRouter);
 
-// نقاط النهاية للمستخدمين
+// تسجيل موجه المستخدمين (Users Router) - جميع الطلبات التي تبدأ بـ /api/users
+// سيتم توجيهها إلى usersRouter للمعالجة
 app.use('/api/users', usersRouter);
 
-// إذا المسار غير موجود
+// معالج 404 - يتم تشغيله إذا لم يتطابق أي مسار مع الطلب
+// يجب أن يكون قبل معالج الأخطاء العام
 app.use(notFoundHandler);
 
-// معالج الأخطاء (آخر شيء)
+// معالج الأخطاء العام - يجب أن يكون آخر middleware
+// يلتقط جميع الأخطاء التي تحدث في التطبيق
 app.use(errorHandler);
 
-// تشغيل السيرفر
+// تشغيل السيرفر والاستماع على المنفذ المحدد
+// عند بدء التشغيل بنجاح، سيطبع رسالة في Console
 app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
 });
