@@ -102,3 +102,22 @@ You can test it by visiting `http://127.0.0.1:3000/` in your browser or using a 
 - Course materials and lecture examples
 
 ---
+## Ohjelmistotestaus
+
+Tähän projektiin on tehty ohjelmistotestauksen yksilötehtäviä. Lisätiedot löytyvät tiedostosta TESTAUS.md.
+
+### Tehtävä 1 – Testaustyökalujen asennus
+
+Tehtävässä 1 asensin seuraavat testaustyökalut omaan ympäristööni:
+
+- Robot Framework
+- Browser Library
+- RequestsLibrary
+- CryptoLibrary
+- Robotidy
+
+Browser Library alustettiin komennolla:
+
+```bash
+python -m Browser.entry init
+```
